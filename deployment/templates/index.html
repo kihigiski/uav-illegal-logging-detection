@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --panel-bg: #2d2d2d;
+            --text-main: #e0e0e0;
+            --text-muted: #888;
+            --accent-green: #4caf50;
+            --accent-red: #f44336;
+            --accent-yellow: #ffeb3b;
+            --accent-blue: #2196f3;
+            --border-color: #444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            height: 60px;
+            flex-shrink: 0; /* ADD THIS: Prevents it from getting squished */
+            background-color: #000;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .brand {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand i { color: #888; }
+
+        .status-bar {
+            display: flex;
+            gap: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 5px var(--accent-green);
+        }
+
+        .main-container {
+            flex: 1;
+            min-height: 0; /* ADD THIS: Stops the video from blowing out the height */
+            display: grid;
+            grid-template-columns: 7fr 3fr;
+            grid-template-rows: 1fr;
+            gap: 2px;
+            background-color: var(--border-color);
+        }
+
+        .viewport-panel {
+            background-color: #111;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 0; /* ADD THIS: Forces the child image to shrink to fit */
+        }
+
+        .simulated-feed {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .camera-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border: 20px solid rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+        
+        .crosshair {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px; height: 40px;
+            border: 1px solid rgba(255,255,255,0.3);
+            pointer-events: none;
+        }
+        
+        .crosshair::after, .crosshair::before {
+            content: '';
+            position: absolute;
+            background: rgba(255,255,255,0.5);
+        }
+        .crosshair::after { top: 19px; left: 0; width: 40px; height: 1px; }
+        .crosshair::before { left: 19px; top: 0; height: 40px; width: 1px; }
+
+        .threat-banner {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(244, 67, 54, 0.9);
+            color: white;
+            padding: 10px 40px;
+            font-weight: bold;
+            font-family: 'JetBrains Mono', monospace;
+            border: 2px solid #fff;
+            box-shadow: 0 0 15px var(--accent-red);
+            animation: pulse 1.5s infinite;
+            z-index: 10;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .sidebar {
+            background-color: var(--panel-bg);
+            display: flex;
+            flex-direction: column;
+            min-height: 0; /* ADD THIS: Stops the sidebar from stretching */
+            height: 100%;  /* ADD THIS: Locks it to the grid height */
+        }
+
+        .telemetry-panel {
+            padding: 15px;
+            border-bottom: 2px solid var(--border-color);
+            flex: 0 0 auto;
+        }
+
+        .panel-title {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .metric-card {
+            background: #222;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .metric-label { font-size: 0.7rem; color: #888; margin-bottom: 5px; }
+        .metric-value { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: bold; }
+
+        .log-panel {
+            flex: 1;
+            padding: 15px;
+            background-color: #000;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            overflow-y: auto; /* This creates the scrollbar */
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 0; /* ADD THIS: Forces the scrollbar to activate instead of growing */
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 2px;
+        }
+        .log-info { color: #ccc; }
+        .log-alert { color: var(--accent-red); font-weight: bold; }
+
+        footer {
+            height: 70px; 
+            background-color: var(--panel-bg); 
+            border-top: 1px solid var(--border-color);
+            display: flex; 
+            align-items: center; 
+            padding: 0 20px;
+            gap: 15px; 
+            position: relative; 
+            z-index: 9999;
+        }
+
+        .btn {
+            padding: 12px 24px; border: none; border-radius: 4px; font-weight: bold;
+            font-family: 'Roboto', sans-serif; cursor: pointer; text-transform: uppercase;
+            display: flex; align-items: center; gap: 10px; transition: all 0.2s;
+        }
+        .btn-start { background-color: var(--accent-green); color: #000; }
+        .btn-stop { background-color: var(--accent-red); color: #fff; }
+        .btn-export { background-color: transparent; color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+
+        @media (max-width: 1000px) {
+            .main-container { grid-template-columns: 1fr; grid-template-rows: 60% 40%; }
+            .sidebar { border-left: none; border-top: 2px solid var(--border-color); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <i class="fa-solid fa-shield-halved"></i>
+            ILLEGAL LOGGING RAPID CONFIRMATION
+        </div>
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-dot"></span> CONNECTION: ONLINE
+            </div>
+            <div class="status-item">
+                <span class="status-dot"></span> GPS: LOCKED
+            </div>
+            <div class="status-item">
+                <i class="fa-solid fa-battery-three-quarters" style="color: var(--accent-green);"></i> 82%
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        
+        <div class="viewport-panel">
+            <div class="simulated-feed" style="background: none;">
+                <img id="live-feed" src="" style="width: 100%; height: 100%; object-fit: contain;" alt="Awaiting Video Signal...">
+                
+                <div class="camera-overlay"></div>
+                <div class="crosshair"></div>
+
+                <div id="threat-banner" class="threat-banner" style="display: none;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    THREAT CONFIRMED: WEAPON DETECTED
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="telemetry-panel">
+                <div class="panel-title"><i class="fa-solid fa-chart-line"></i> Flight Telemetry</div>
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">ALTITUDE (AGL)</div>
+                        <div class="metric-value" id="telemetry-alt">-- m</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">VELOCITY</div>
+                        <div class="metric-value" id="telemetry-vel">-- m/s</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">HEADING</div>
+                        <div class="metric-value" id="telemetry-head">--</div>
+                    </div>
+                    <div class="metric-card" style="border-left-color: var(--accent-green);">
+                        <div class="metric-label">GPS COORDS</div>
+                        <div class="metric-value" id="telemetry-gps">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="log-panel" id="log-container">
+                <div class="panel-title" style="background:none; border:none; margin-bottom:10px;">
+                    <i class="fa-solid fa-terminal"></i> Mission Event Log
+                </div>
+            </div>
+        </div>
+    </div>
+
+<footer>
+        <button id="btn-start" class="btn btn-start" onclick="startMission()">
+            <i class="fa-solid fa-play"></i> Start Mission
+        </button>
+        
+        <button id="btn-stop" class="btn btn-stop" onclick="stopMission()">
+            <i class="fa-solid fa-ban"></i> Stop Mission
+        </button>
+        
+        <div style="flex:1"></div>
+        
+        <a href="http://127.0.0.1:5001/export_csv" class="btn btn-export" style="text-decoration: none;">
+            <i class="fa-solid fa-download"></i> EXPORT LOGS (CSV)
+        </a>
+    </footer>
+
+    <script>
+        // 1. Connect the Video Feed to Port 5001
+        window.onload = function() {
+            console.log("UI Loaded. Connecting to Drone Video Feed...");
+            document.getElementById('live-feed').src = "http://127.0.0.1:5001/video_transmit";
+        };
+
+        // 2. Connect the Telemetry Data to Port 5001
+        function updateDashboard() {
+            fetch('http://127.0.0.1:5001/telemetry_transmit')
+                .then(response => {
+                    if (!response.ok) throw new Error("Network response was not ok");
+                    return response.json();
+                })
+                .then(data => {
+                    // Update Threat Banner
+                    const banner = document.getElementById('threat-banner');
+                    banner.style.display = data.threat_active ? 'block' : 'none';
+
+                    // Update Telemetry Numbers
+                    document.getElementById('telemetry-alt').innerText = data.telemetry.altitude;
+                    document.getElementById('telemetry-vel').innerText = data.telemetry.velocity;
+                    document.getElementById('telemetry-head').innerText = data.telemetry.heading;
+                    document.getElementById('telemetry-gps').innerText = data.telemetry.gps;
+
+                    // Update Logs
+                    const logContainer = document.getElementById('log-container');
+                    logContainer.innerHTML = `
+                        <div class="panel-title" style="background:none; border:none; margin-bottom:10px;">
+                            <i class="fa-solid fa-terminal"></i> Mission Event Log
+                        </div>
+                    `;
+
+                    data.logs.forEach(log => {
+                        const isAlert = log.includes("THREAT CONFIRMED");
+                        const logClass = isAlert ? "log-alert" : "log-info";
+                        logContainer.innerHTML += `
+                            <div class="log-entry">
+                                <span class="${logClass}">${log}</span>
+                            </div>
+                        `;
+                    });
+
+                    logContainer.scrollTop = logContainer.scrollHeight;
+                })
+                .catch(error => console.error('Data pipeline error:', error));
+        }
+
+        // Ping the drone for new data every 500ms
+        setInterval(updateDashboard, 500);
+
+        // MISSION CONTROL COMMANDS
+
+        function startMission() {
+            console.log("Commanding Edge Node to Boot...");
+            fetch('/start_mission', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ role: 'control' }) // Sending the Control ID
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+                setTimeout(() => {
+                    document.getElementById('live-feed').src = "http://127.0.0.1:5001/video_transmit";
+                }, 8000); 
+            })
+            .catch(err => console.error(err));
+        }
+
+        function stopMission() {
+            console.log("Commanding Edge Node to Terminate...");
+            fetch('/stop_mission', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ role: 'control' }) // Sending the Control ID
+            })
+            .then(response => response.json())
+            .then(data => console.log(data.message))
+            .catch(err => console.error(err));
+            
+            document.getElementById('live-feed').src = "";
+        }
+
+        function exportLogs() {
+            console.log("Generating Mission CSV...");
+            // Pull the latest data directly from the drone
+            fetch('http://127.0.0.1:5001/telemetry_transmit')
+                .then(response => {
+                    if (!response.ok) throw new Error("Drone disconnected");
+                    return response.json();
+                })
+                .then(data => {
+                    // Create a CSV format
+                    let csvContent = "data:text/csv;charset=utf-8,";
+                    csvContent += "System Log Data\n"; // Header row
+                    
+                    data.logs.forEach(function(logEntry) {
+                        // Wrap in quotes to prevent commas in the log from breaking the columns
+                        csvContent += `"${logEntry}"\n`; 
+                    });
+
+                    // Trigger the browser download
+                    const encodedUri = encodeURI(csvContent);
+                    const link = document.createElement("a");
+                    link.setAttribute("href", encodedUri);
+                    link.setAttribute("download", "drone_mission_logs.csv");
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                })
+                .catch(err => alert("Cannot export: The Drone Edge Node is not currently running."));
+        }
+    </script>
+</body>
+</html>

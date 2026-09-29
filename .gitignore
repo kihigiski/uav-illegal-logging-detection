@@ -1,0 +1,42 @@
+# Python virtual environments & bytecode
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+
+# Local databases & transient benchmark outputs
+*.db
+mission_data.db
+mission_results_*.csv
+final_aggregate_summary.csv
+
+# Large neural network checkpoints & model weights (hosted on Google Drive)
+*.pt
+*.pth
+*.onnx
+*.engine
+
+# Don't ignore the README inside the weights folder
+!models/weights/README.md
+
+# Raw media, downloaded videos, and synthetic dataset folders
+data/raw_images/
+data/raw_video_frames/
+data/synthetic/
+*.mp4
+*.avi
+*.mov
+*.part
+current_download.*
+logger_dataset/
+
+# Operating system artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor caches
+.vscode/
+.idea/
