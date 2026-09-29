@@ -8,7 +8,7 @@ import random
 
 # --- CONFIGURATION ---
 SCENARIO = "chainsaw_color_randomized"
-BASE_PATH = r"C:\Users\admin\Desktop\Simon\Simon (2)\IS Dissertation\Data Collection\simulation\sim_training_data\chainsaw_color_randomized"
+BASE_PATH = os.path.join("data", "synthetic", SCENARIO)
 IMG_DIR = os.path.join(BASE_PATH, "images")
 LBL_DIR = os.path.join(BASE_PATH, "labels")
 
