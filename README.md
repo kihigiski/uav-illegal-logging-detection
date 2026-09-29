@@ -6,23 +6,23 @@
 [![Simulation: Unreal Engine + AirSim](https://img.shields.io/badge/Simulation-Unreal%20Engine%20%7C%20AirSim-black.svg)](https://github.com/microsoft/AirSim)
 [![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/)
 
-> **Master's Dissertation Project**[cite: 3]  
-> **Author:** Simon Kihigi Mburu (Admission No: 196293)[cite: 3]  
-> **Supervisor:** Dr. Henry Muchiri[cite: 3]  
-> **Institution:** School of Computing and Engineering Sciences, Strathmore University, Nairobi, Kenya (August 2026)[cite: 3]  
+> **Master's Dissertation Project**  
+> **Author:** Simon Kihigi Mburu (Admission No: 196293)  
+> **Supervisor:** Dr. Henry Muchiri  
+> **Institution:** School of Computing and Engineering Sciences, Strathmore University, Nairobi, Kenya (August 2026)  
 > **Official Citation:** See [BibTeX](#citation) below.
 
 ---
 
-An end-to-end aerial surveillance system designed for rapid visual confirmation of illegal logging operations in open-to-moderately canopied forest environments (15% to 65% canopy cover)[cite: 3]. Developed and evaluated at Strathmore University[cite: 3].
+An end-to-end aerial surveillance system designed for rapid visual confirmation of illegal logging operations in open-to-moderately canopied forest environments (15% to 65% canopy cover). Developed and evaluated at Strathmore University.
 
 ## Core Features
-- **Physics-Realistic Simulation:** Procedural canopy density calibrated to 62.71% using Monte Carlo ray tracing within Unreal Engine's Leaf Tree Biome[cite: 3].
-- **Automated Synthetic Annotation:** Ground-truth semantic segmentation bounding box extraction using Microsoft AirSim APIs[cite: 3].
-- **Domain Randomization Engine:** Parametric weather cycles (sun, cloud, heavy fog), variable camera angles (eye-level to 90° nadir), and HSV-based color randomization[cite: 3].
-- **Edge-Optimized Neural Stack:** YOLOv8s + BoT-SORT multi-object tracking exported to ONNX (FP16 half-precision, 224x224 tensor resolution)[cite: 3].
-- **Temporal False-Positive Mitigation:** 5-frame temporal persistence logic (`AlertFilter`) preventing transient false-positive alarms[cite: 3].
-- **Full Edge Application:** Flask dashboard featuring real-time telemetry overlays, thread-safe asynchronous SQLite logging, and instant PDF incident reporting for field rangers[cite: 3].
+- **Physics-Realistic Simulation:** Procedural canopy density calibrated to 62.71% using Monte Carlo ray tracing within Unreal Engine's Leaf Tree Biome.
+- **Automated Synthetic Annotation:** Ground-truth semantic segmentation bounding box extraction using Microsoft AirSim APIs.
+- **Domain Randomization Engine:** Parametric weather cycles (sun, cloud, heavy fog), variable camera angles (eye-level to 90° nadir), and HSV-based color randomization.
+- **Edge-Optimized Neural Stack:** YOLOv8s + BoT-SORT multi-object tracking exported to ONNX (FP16 half-precision, 224x224 tensor resolution).
+- **Temporal False-Positive Mitigation:** 5-frame temporal persistence logic (`AlertFilter`) preventing transient false-positive alarms.
+- **Full Edge Application:** Flask dashboard featuring real-time telemetry overlays, thread-safe asynchronous SQLite logging, and instant PDF incident reporting for field rangers.
 
 ## Model Benchmarks (Real-World Test Set, n=659)
 | Class | Precision | Recall | mAP@0.5 | mAP@0.5:0.95 |
@@ -34,16 +34,16 @@ An end-to-end aerial surveillance system designed for rapid visual confirmation 
 
 ## Datasets & Model Weights
 
-Raw video corpora, training splits, and model weights are hosted externally in persistent cloud storage[cite: 3]:
+Raw video corpora, training splits, and model weights are hosted externally in persistent cloud storage:
 
-- **Stage 1 Baseline Data & Weights:** [Google Drive - Stage 1](https://drive.google.com/drive/folders/1bDmBbZluQgv06z1Aljc0pW51-aMe2glj?usp=sharing)[cite: 3]
-  - Curated real-world images (n = 2,623) + annotations and `baseline_best.pt`[cite: 3].
-- **Stage 2 Domain-Randomized Data & Weights:** [Google Drive - Stage 2](https://drive.google.com/drive/folders/145cvXRAeeo6DBCxepCTzyScJALPermWL?usp=sharing)[cite: 3]
-  - Combined synthetic + real-world corpus (n = 6,592) and `domain_rand_best.pt`[cite: 3].
-- **Data Provenance & Source Registries:** [Google Drive - Provenance Logs](https://drive.google.com/drive/folders/1x67slG9JaJurySs6riVi4IRruOCqVZju?usp=sharing)[cite: 3]
-  - Detailed CSV manifests recording source URLs, timestamps, query strings, and license tags[cite: 3].
-- **Downloaded Raw Forestry Videos:** [Google Drive - Video Archives](https://drive.google.com/drive/folders/104hUfY_z2yWcK0b0xC7MED7P2lxXU4yt?usp=sharing)[cite: 3]
-  - Full-resolution raw video sequences used for interval frame extraction[cite: 3].
+- **Stage 1 Baseline Data & Weights:** [Google Drive - Stage 1](https://drive.google.com/drive/folders/1bDmBbZluQgv06z1Aljc0pW51-aMe2glj?usp=sharing)
+  - Curated real-world images (n = 2,623) + annotations and `baseline_best.pt`.
+- **Stage 2 Domain-Randomized Data & Weights:** [Google Drive - Stage 2](https://drive.google.com/drive/folders/145cvXRAeeo6DBCxepCTzyScJALPermWL?usp=sharing)
+  - Combined synthetic + real-world corpus (n = 6,592) and `domain_rand_best.pt`.
+- **Data Provenance & Source Registries:** [Google Drive - Provenance Logs](https://drive.google.com/drive/folders/1x67slG9JaJurySs6riVi4IRruOCqVZju?usp=sharing)
+  - Detailed CSV manifests recording source URLs, timestamps, query strings, and license tags.
+- **Downloaded Raw Forestry Videos:** [Google Drive - Video Archives](https://drive.google.com/drive/folders/104hUfY_z2yWcK0b0xC7MED7P2lxXU4yt?usp=sharing)
+  - Full-resolution raw video sequences used for interval frame extraction.
 
 ## Quickstart
 
