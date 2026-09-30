@@ -37,34 +37,49 @@ An end-to-end aerial surveillance system designed for rapid visual confirmation 
 Raw video corpora, training splits, and model weights are hosted externally in persistent cloud storage:
 
 - **Stage 1 Baseline Data & Weights:** [Google Drive - Stage 1](https://drive.google.com/drive/folders/1bDmBbZluQgv06z1Aljc0pW51-aMe2glj?usp=sharing)
-  - Curated real-world images (n = 2,623) + annotations and `baseline_best.pt`.
+  - Curated real-world images (n = 2,623) + annotations.
 - **Stage 2 Domain-Randomized Data & Weights:** [Google Drive - Stage 2](https://drive.google.com/drive/folders/145cvXRAeeo6DBCxepCTzyScJALPermWL?usp=sharing)
-  - Combined synthetic + real-world corpus (n = 6,592) and `domain_rand_best.pt`.
+  - Combined synthetic + real-world corpus (n = 6,592)`.
 - **Data Provenance & Source Registries:** [Google Drive - Provenance Logs](https://drive.google.com/drive/folders/1x67slG9JaJurySs6riVi4IRruOCqVZju?usp=sharing)
   - Detailed CSV manifests recording source URLs, timestamps, query strings, and license tags.
 - **Downloaded Raw Forestry Videos:** [Google Drive - Video Archives](https://drive.google.com/drive/folders/104hUfY_z2yWcK0b0xC7MED7P2lxXU4yt?usp=sharing)
   - Full-resolution raw video sequences used for interval frame extraction.
 
-## Quickstart
+## Simulation & Edge Surveillance Workflow
 
-### 1. Environment Setup
-```bash
-git clone [https://github.com/kihigiski/uav-illegal-logging-detection.git](https://github.com/kihigiski/uav-illegal-logging-detection.git)
-cd uav-illegal-logging-detection
-python -m venv venv
-# On Windows:
-.\venv\Scripts\activate
-# On Linux/macOS:
-source venv/bin/activate
+### Prerequisites
+- **Unreal Engine 4.27:** Ensure UE 4.27 is installed (subsequent versions such as UE5+ are incompatible with the Microsoft AirSim release utilized).
+- **AirSim Plugin:** Pre-configured and integrated inside `simulation/ue_project/Plugins/AirSim`.
+- **Python 3.10:** Virtual environment with project dependencies installed (`pip install -r requirements.txt`).
 
-pip install -r requirements.txt
-```
+### Mission Execution Guide
 
-### 2. Launch Edge Mission Control
-```bash
-python deployment/app.py
-```
-Access the operator control dashboard at `http://localhost:5000`.
+1. **Launch Simulation Environment:**
+   - Open `simulation/ue_project/UAV_Illegal_Logging_Detection.uproject` inside Unreal Engine 4.27.
+   - Place the logging character actor (`Logger`) at the designated coordinate sector within the procedural leaf tree biome.
+
+2. **Configure AirSim CV Mode:**
+   - Ensure AirSim operates in Computer Vision mode by setting `SimMode` in your local `Documents/AirSim/settings.json`:
+     ```json
+     {
+       "SeeDocsAt": "[https://github.com/Microsoft/AirSim/blob/main/docs/settings.md](https://github.com/Microsoft/AirSim/blob/main/docs/settings.md)",
+       "SettingsVersion": 1.2,
+       "SimMode": "ComputerVision"
+     }
+     ```
+   - Press **Play** in Unreal Engine to spin up the local AirSim simulation server.
+
+3. **Launch the Edge Surveillance Dashboard:**
+   - In a terminal window (or separate monitor), start the edge mission control server:
+     ```bash
+     python deployment/app.py
+     ```
+   - Open your browser to `http://localhost:5000`.
+
+4. **Live Mission Confirmation:**
+   - In the dashboard interface, click **Start Mission** to initiate the live video telemetry feed from Unreal Engine.
+   - Navigate ("fly") the CV drone toward the target forest coordinates where the logging character is positioned.
+   - Observe real-time bounding box inferences (Logger, Chainsaw, Axe), temporal persistence alert filters, and automatic incident logging.
 
 ## Citation
 ```bibtex
