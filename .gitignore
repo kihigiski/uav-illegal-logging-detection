@@ -40,3 +40,20 @@ desktop.ini
 # IDE & Editor caches
 .vscode/
 .idea/
+
+
+# Unreal Engine Specific Ignores
+**/Binaries/
+**/Build/
+**/DerivedDataCache/
+**/Intermediate/
+**/Saved/
+**/.vs/
+**/*.VC.db
+**/*.opensdf
+**/*.opendb
+**/*.sdf
+**/*.sln.docstates
+**/*.suo
+**/*.xcodeproj
+**/*.xcworkspace
