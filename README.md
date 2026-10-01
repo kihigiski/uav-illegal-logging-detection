@@ -8,12 +8,12 @@
 [![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/)
 
 > **Master's Dissertation Title:** *A Proactive UAV-Based Intelligent System for Rapid Visual Confirmation of Illegal Logging Activities for Open and Moderately Canopied Forests Using Computer Vision*  
-> **Author:** Simon Kihigi Mburu (Admission No: 196293)  
+> **Author:** Simon Kihigi Mburu  
 > **Supervisor:** Dr. Henry Muchiri  
 > **Institution:** School of Computing and Engineering Sciences, Strathmore University, Nairobi, Kenya (August 2026)  
 > 
 > **Preprint Paper Title:** [*Edge-AI-Enabled UAV System for Rapid Visual Confirmation of Illegal Logging in Remote Forest Environments*](https://dx.doi.org/10.21203/rs.3.rs-10091974/v1)  
-> **Preprint Authors:** Simon Kihigi Mburu, Henry Muchiri  
+> **Preprint Authors:** Simon Mburu, Henry Muchiri  
 > **DOI:** [10.21203/rs.3.rs-10091974/v1](https://dx.doi.org/10.21203/rs.3.rs-10091974/v1)  
 > **Official Citation:** See [BibTeX](#citation) below.
 
@@ -91,7 +91,7 @@ Raw video corpora, training splits, and model weights are hosted externally in p
 ### Preprint Article
 ```bibtex
 @article{mburu2026edge,
-  author    = {Mburu, Simon Kihigi and Muchiri, Henry},
+  author    = {Mburu, Simon and Muchiri, Henry},
   title     = {Edge-AI-Enabled UAV System for Rapid Visual Confirmation of Illegal Logging in Remote Forest Environments},
   journal   = {Research Square},
   year      = {2026},
